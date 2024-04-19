@@ -57,9 +57,11 @@ def get_trainer_kwargs(model_size: str, *, vocab_size: int) -> Dict[str, Any]:
     elif model_size == "7B":
         trainer_kwargs = dict(
             model_kwargs=dict(
-                num_layers=2,
+                num_layers=32,
                 hidden_dim=128 * 32,
+                ffn_dim=scaled_hidden_dim(scale=4, round_up_to_multiples_of=16),
                 num_heads=32,
+                vocab_size=32000,
             ),
             learner_kwargs=dict(peak_lr=3e-4, weight_decay=0.1),
             input_partition_type=DataPartitionType.DATA,
