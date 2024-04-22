@@ -22,7 +22,6 @@ from axlearn.common.layers import RMSNorm
 from axlearn.experiments.text.gpt.common import STEP_DTYPE, learner_config, mesh_shape_from_axes
 from axlearn.experiments.text.gpt.common import model_config as common_model_config
 from axlearn.experiments.text.gpt.common import scaled_hidden_dim
-# TODO: apoorvgu I do not like this DataPartitionType
 from axlearn.common.utils import DataPartitionType
 import jax
 
@@ -56,7 +55,6 @@ def get_trainer_kwargs(model_size: str, *, vocab_size: int) -> Dict[str, Any]:
         )
     elif model_size == "7B":
         import os
-        DP_DEGREE = (int(os.getenv('SLURM_JOB_NUM_NODES'))*32)//TRN_MODEL_AXIS_SIZE
         trainer_kwargs = dict(
             model_kwargs=dict(
                 num_layers=32,
@@ -84,7 +82,7 @@ def get_trainer_kwargs(model_size: str, *, vocab_size: int) -> Dict[str, Any]:
                 ),
                 (   
                     "neuron-(trn1.32xlarge|trn1n.32xlarge)-(32|64|256|512|1024)",
-                    mesh_shape_from_axes(data=DP_DEGREE, model=TRN_MODEL_AXIS_SIZE),
+                    mesh_shape_from_axes(data=-1, model=TRN_MODEL_AXIS_SIZE),
                 ),
             ),
         )
