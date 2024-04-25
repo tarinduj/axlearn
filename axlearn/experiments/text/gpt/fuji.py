@@ -56,6 +56,7 @@ def get_trainer_kwargs(model_size: str, *, vocab_size: int) -> Dict[str, Any]:
             train_batch_size=16,
             max_step=3000,
             mesh_shape=mesh_shape_from_axes(),  # cpu
+            eval_batch_size=int(jax.device_count()/TRN_MODEL_AXIS_SIZE),
         )
     elif model_size == "7B":
         trainer_kwargs = dict(
@@ -88,6 +89,8 @@ def get_trainer_kwargs(model_size: str, *, vocab_size: int) -> Dict[str, Any]:
                     mesh_shape_from_axes(data=-1, model=TRN_MODEL_AXIS_SIZE),
                 ),
             ),
+            eval_batch_size=int(jax.device_count()/TRN_MODEL_AXIS_SIZE),
+            eval_every_n_steps=5000,
         )
         print("batch size is ", trainer_kwargs["train_batch_size"])
     else:
