@@ -169,3 +169,9 @@ wandb/
 
 # Custom
 .axlearn.config
+
+# slurm/ dumps
+compiler_dump/
+jax_dump/
+neuron_dump/
+slurm-run_trn.sh-*
